@@ -6,7 +6,7 @@ export const CartWidget = () => {
     return (
         <div className="container-cart">
             <BsFillCartCheckFill 
-            size={110} 
+            size={50} 
             color={"#181818"}/>
         </div>
     )
