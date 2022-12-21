@@ -1,50 +1,111 @@
+import { useState, useEffect } from "react"
 
-import {useState, useEffect} from "react"
-//import CustomButtom from "../customButton/CustomButton"
 import "./ItemListContainer.css"
-import Counter from '../counter/counter'
 
-const ItemListContainer = ( { greeting } ) => {
+import ItemList from "../itemList/ItemList"
 
-    const [ isDark, setIsDark ] = useState( false )
-    const [ num , setNum ] = useState(0)
+import { useParams } from "react-router-dom"
+import DotLoader from "react-spinners/DotLoader";
 
-    const tooggleMode = () =>{
-        
-        setIsDark  ( !isDark )
+import { getDocs, collection, query, where } from "firebase/firestore"
+import { db } from "../../firebaseConfig"
+
+const override = {
+  display: "block",
+  margin: "0 auto",
+  borderColor: "red",
+};
+
+const ItemListContainer = () => {
+  const { categoryName } = useParams()
+
+  const [items, setItems] = useState([])
+  const [ isLoading, setIsLoading ] = useState(false)
+
+  console.log(categoryName)
+
+  useEffect(() => {
+
+    setIsLoading(true)
+
+    // const productosFiltered = products.filter(
+    //   (productos) => productos.category === categoryName
+    // )
+
+    // const getProducts = new Promise((resolve, reject) => {
+    //   setTimeout(() => {
+    //     resolve(categoryName ? productosFiltered : products)
+    //   }, 500)
+    // })
+
+    // getProducts
+    //   .then((res) => {
+    //     setItems(res)
+    //   })
+    //   .catch((err) => {
+    //     console.log("se rechazo")
+    //   })
+
+    const itemCollection = collection( db, "products" )
+
+    if( categoryName ){
+      const q = query( itemCollection, where( "category" , "==" , categoryName ) )
+      getDocs(q)
+      .then( (res) => {
+        const products = res.docs.map( product => { // [{}, {}]
+          return {
+            
+            ...product.data(),
+            id: product.id
+          }
+        } )
+
+        setItems(products)
+      })
+      .catch( (err) => console.log(err))
+
+    }else{
+
+      getDocs(itemCollection)
+      .then( (res) => {
+        const products = res.docs.map( product => { // [{}, {}]
+          return {
+            
+            ...product.data(),
+            id: product.id
+          }
+        } )
+
+        setItems(products)
+      })
+      .catch( (err) => console.log(err))
+
     }
 
-    console.log(isDark)
     
-    useEffect( ()=>{
-        console.log("Hola dentro del primer Efecto")
-    } )
 
-    useEffect( ()=>{
-        console.log("Hola desde el efecto con array de dependencia VACIO")
-    }, [] ) //arreglo de dependencia
-    useEffect( ()=>{
-        console.log("Hola desde el efecto con array de dependencia a la escucha de NUM")
-    }, [ num ] ) //arreglo de dependencia
+      setTimeout( ()=>{
+        setIsLoading(false)
+      }, 1000)
 
-    const onAdd = ()=>{
-        console.log("Hola")
-    }
+  }, [categoryName])
 
-    return (
-    <div className={isDark ? "container-items-dark" : "container-items-light"}>
-            <h2>{greeting}</h2>
-            <button onClick={tooggleMode}>
-                {isDark ? "Cambiar a Modo Claro" : "Cambiar a Modo Oscuro"}
-            </button>
-            <button onClick={()=> setNum(num + 1)}>
-                Sumar
-            </button>
+  return (
+    <div className="light">
+      
+      {
+        isLoading ? <DotLoader
+        color={"purple"}
+        cssOverride={override}
+        size={150}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      /> : <ItemList items={items} />
+      }
 
-            <Counter stock={10} initial={1} onAdd={onAdd} /> 
-
-        </div>
-        )
+      {/* <ItemList items={items} /> */}
+    </div>
+  )
 }
 
 export default ItemListContainer

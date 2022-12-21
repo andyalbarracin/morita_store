@@ -1,14 +1,27 @@
+// rafce --> export default || rafc --> export nombrado
 
-import "./cartWidget.css"
-import { BsFillCartCheckFill } from 'react-icons/bs';
+import { useContext } from "react"
+import "./CartWidget.css"
+import { BsFillCartCheckFill } from "react-icons/bs"
+import { Link } from "react-router-dom"
+import { CartContext } from "../../context/CartContext"
 
 export const CartWidget = () => {
-    return (
-        <div className="container-cart">
-            <BsFillCartCheckFill 
-            size={50} 
-            color={"#181818"}/>
-        </div>
-    )
-}
+  const { cart } = useContext(CartContext)
 
+  return (
+    <div className="container-cart">
+      <Link to="/cart">
+        <BsFillCartCheckFill
+          style={{
+            fontSize: "2rem",
+            color: "#7F669D",
+          }}
+        />
+        <div className="bubble-counter">
+          <span style={{color: "#7F669D"}}>{cart.length}</span>
+        </div>
+      </Link>
+    </div>
+  )
+}
