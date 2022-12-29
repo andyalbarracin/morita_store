@@ -1,23 +1,24 @@
-
-import CustomButtom from "./components/customButton/CustomButton";
-import Counter from "./components/counter/counter";
-import ItemListContainer from "./components/itemListContainer/ItemListContainer";
-import NavBar from "./components/navBar/NavBar"
-
+import React from 'react'
+import { Header } from "./components/Header";
+import { Carrito } from "./components/Carrito";
+import {DataProvider} from './context/DataProvider';
+import { BrowserRouter as Router} from "react-router-dom";
+import Pages from "./components/Page.js";
+import "boxicons";
 
 function App() {
+
   return (
-    <div>
-      <NavBar />
-      
-      <ItemListContainer greeting={"Hola Andy como estas?"} />
-      
-      <Counter />          
-
+    <DataProvider>
+    <div className="App">
+      <Router>
+      <Header />
+      <Carrito />
+      <Pages />
+      </Router>
     </div>
-
+    </DataProvider>
   );
-} 
+}
 
 export default App;
-
