@@ -1,5 +1,5 @@
 import React, {useContext} from 'react'
-import { DataContext } from "context/DataProvider";
+import { DataContext } from "../../../context/DataProvider";
 import { ProductoItem } from "./ProductoItem";
 
 export const ProductosList = () => {
@@ -8,7 +8,7 @@ export const ProductosList = () => {
     return (
 			<>
 			<h1 className="produ">PRODUCTOS</h1>
-        <div className="productos">
+        	<div className="productos">
             {
 							productos.map(producto =>(
 								<ProductoItem 
@@ -21,7 +21,7 @@ export const ProductosList = () => {
 								/>
 							))
 						}					
-        </div>
+        	</div>
 				</>
     )
 }

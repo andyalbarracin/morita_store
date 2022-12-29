@@ -1,13 +1,11 @@
 import React, {useContext} from "react";
 import { Link } from "react-router-dom";
-import { DataContext } from "context/DataProvider";
+import { DataContext } from "../../../context/DataProvider";
 
 export const ProductoItem = ({title, image, category, price, id}) => {
 
   const value = useContext(DataContext);
   const addCarrito = value.addCarrito;
-
-
 
   return (
     
